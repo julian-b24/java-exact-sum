@@ -11,6 +11,8 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 
+		long start = System.currentTimeMillis();
+		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		
@@ -40,6 +42,8 @@ public class Main {
 			bw.write(output);
 		}
 
+		long time = System.currentTimeMillis() - start;
+		bw.write(time + "");
 		
 		br.close();
 		bw.close();
@@ -54,22 +58,27 @@ public class Main {
 		int maxIdx = getMaxIdx(prices, books, money);
 		int[] values = new int[2];
 		
-		boolean stop = false;
 		int diff = money;
 		
-		for (int k = 0; k < maxIdx && !stop; k++) {
+		for (int k = 0; k < maxIdx + 1; k++) {
 			
 			int tempPrice = prices[k];
-			if(diff > Math.abs(tempPrice - (money - tempPrice))) {
-				diff = Math.abs(tempPrice - (money - tempPrice));
-				values[i] = tempPrice;
-				values[j] = money - tempPrice;
+			
+			for (int l = k + 1; l < maxIdx + 1; l++) {
+				
+				if(tempPrice + prices[l] == money && diff > Math.abs(tempPrice - prices[l])) {
+					
+					diff = Math.abs(tempPrice - prices[l]);
+					values[i] = tempPrice;
+					values[j] = prices[l];
+				}
 			}
 		}
 		
 		return values;
 	}
 
+	//Gets the index of a value greater or equal than the money peter could pay.
 	private static int getMaxIdx(int[] prices, int books, int money) {
 		
 		int low = 0;
@@ -86,6 +95,7 @@ public class Main {
 			}
 			maxIdx = top;
 		}
+		
 		return maxIdx;
 	}
 
